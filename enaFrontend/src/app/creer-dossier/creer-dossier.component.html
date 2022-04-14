@@ -1,0 +1,268 @@
+<div class="row">
+  <div class="col-md-12 col-sm-12 mb-2">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header__title">Création Dossier</h4>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="editForm" (ngSubmit)="addDossier()">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <fieldset>
+                <div class="row text-right">
+                  <div class="col-md-4 col-sm-4">
+                    <label class="mr-2">Voie d'accès <b class="text-danger">*</b></label>
+                    <select class="form-control" formControlName="voieAcces"
+                      [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                      <option value="">Choix Voie</option>
+                      <option *ngFor="let voie of voies" value="{{voie.id}}">{{voie.nom}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 col-sm-4">
+                    <label class="mr-2">Type d'élève <b class="text-danger">*</b></label>
+                    <select class="form-control" formControlName="typeEleve"
+                      [ngClass]="{'is-invalid': submitted && f.typeEleve.errors}">
+                      <option value="">Choix type</option>
+                      <option value="Elève" selected>Elève</option>
+                      <option value="Auditeur">Auditeur</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 col-sm-4">
+                    <label class="mr-2">N° Concours</label>
+                    <input type="text" class="form-control" placeholder="N° Concours" formControlName="numConcours">
+                  </div>
+                  <div class="col-md-4 col-sm-4">
+                    <label class="mr-2">Cycle <b class="text-danger">*</b></label>
+                    <select class="form-control" formControlName="cycle"
+                      [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                      <option value="">Choix cycle</option>
+                      <option *ngFor="let cycle of cycles" value="{{cycle.id}}">{{cycle.nom}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 col-sm-4">
+                    <label class="mr-2">Matricule</label>
+                    <input type="text" class="form-control" placeholder="Matricule" formControlName="matricule">
+                  </div>
+                  <div class="col-md-4 col-sm-4">
+                    <label class="mr-2">Promotion <b class="text-danger">*</b></label>
+                    <select class="form-control" formControlName="promotion"
+                      [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                      <option value="">Choix promotion</option>
+                      <option *ngFor="let promotion of promotions" value="{{promotion.id}}">{{promotion.nom}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 col-sm-4">
+                    <label class="mr-2">Section</label>
+                    <select class="form-control" formControlName="section">
+                      <option value="">Choix section</option>
+                      <option *ngFor="let section of sections" value="{{section.id}}">{{section.nom}}</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-12 col-sm-12">
+              <fieldset>
+                <legend>Identification</legend>
+                <div class="row text-right">
+                  <div class="col-md-8 col-sm-8">
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">Prénom <b class="text-danger">*</b></label>
+                        <input type="text" class="form-control" placeholder="Prénom" formControlName="prenom"
+                          [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">Sexe <b class="text-danger">*</b></label>
+                        <select class="form-control" formControlName="sexe"
+                          [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                          <option value="">Choix sexe</option>
+                          <option value="masculin">Masculin</option>
+                          <option value="feminin">Féminin</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">Nom <b class="text-danger">*</b></label>
+                        <input type="text" class="form-control" placeholder="Nom" formControlName="nom"
+                          [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">Nationalité <b class="text-danger">*</b></label>
+                        <select class="form-control" formControlName="nationalite"
+                          [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                          <option value="">Choix Nationalité</option>
+                          <option *ngFor="let pay of pays" value="{{pay.nationalite}}">{{pay.nationalite}}</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">Date Naiss <b class="text-danger">*</b></label>
+                        <input type="date" class="form-control" formControlName="dateNaiss">
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">NCI <b class="text-danger">*</b></label>
+                        <input type="text" class="form-control" placeholder="Numéro carte d'identité"
+                          formControlName="nci">
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">Prénom mère <b class="text-danger">*</b></label>
+                        <input type="text" class="form-control" placeholder="Prénom mère" formControlName="prenomMere">
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">Prénom père <b class="text-danger">*</b></label>
+                        <input type="text" class="form-control" placeholder="Prénom père" formControlName="prenomPere">
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">Nom mère <b class="text-danger">*</b></label>
+                        <input type="text" class="form-control" placeholder="Nom mère" formControlName="nomMere">
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <label class="mr-2">Nom père <b class="text-danger">*</b></label>
+                        <input type="text" class="form-control" placeholder="Nom père" formControlName="nomPere">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-sm-4">
+                    <div class="row text-right">
+                      <div class="col-md-12 col-sm-12">
+                        <label class="mr-2">Pays</label>
+                        <select class="form-control" (change)="getRegions($event)" formControlName="pays">
+                          <option value="">Choix pays</option>
+                          <option *ngFor="let pay of pays" value="{{pay.id}}">{{pay.nom}}</option>
+                        </select>
+                      </div>
+                      <div class="col-md-12 col-sm-12">
+                        <label class="mr-2">Région</label>
+                        <select class="form-control" (change)="getVilles($event)" formControlName="region">
+                          <option value="">Choix région</option>
+                          <option *ngFor="let region of regions" value="{{region.id}}">{{region.nom}}</option>
+                        </select>
+                      </div>
+                      <div class="col-md-12 col-sm-12">
+                        <label class="mr-2">Ville</label>
+                        <select class="form-control" formControlName="ville">
+                          <option value="">Choix ville</option>
+                          <option *ngFor="let ville of villes" value="{{ville.id}}">{{ville.nom}}</option>
+                        </select>
+                      </div>
+                      <div class="col-md-12 col-sm-12">
+                        <label class="mr-2">Lieu Naiss <b class="text-danger">*</b></label>
+                        <input type="text" class="form-control" placeholder="Lieu naissance"
+                          formControlName="lieuNaiss">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-4 col-sm-4 mb-2">
+              <fieldset>
+                <legend>Adresses</legend>
+                <div class="row text-right">
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">A Dakar</label>
+                    <input type="text" class="form-control" placeholder="A Dakar" formControlName="aDakar">
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Hors de Dakar</label>
+                    <input type="text" class="form-control" placeholder="Hors de Dakar" formControlName="horsDakar">
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Email Privé <b class="text-danger">*</b></label>
+                    <input type="text" class="form-control" placeholder="Email privé" formControlName="emailPrive">
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Email Pro</label>
+                    <input type="text" class="form-control" placeholder="Email Pro" formControlName="emailPro">
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-4 col-sm-4 mb-2">
+              <fieldset>
+                <legend>Téléphones</legend>
+                <div class="row text-right">
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Mobile 1 <b class="text-danger">*</b></label>
+                    <input type="text" class="form-control" placeholder="Mobile 1" formControlName="mobile1">
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Mobile 2</label>
+                    <input type="text" class="form-control" placeholder="Mobile 2" formControlName="mobile2">
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Mobile 3</label>
+                    <input type="text" class="form-control" placeholder="Mobile 3" formControlName="mobile3">
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Domicile</label>
+                    <input type="text" class="form-control" placeholder="Domicile" formControlName="domicile">
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-4 col-sm-4 mb-2">
+              <fieldset>
+                <legend>En cas d'urgence</legend>
+                <div class="row text-right">
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Prénom <b class="text-danger">*</b></label>
+                    <input type="text" class="form-control" placeholder="Prénom" formControlName="prenomUrgence">
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Nom <b class="text-danger">*</b></label>
+                    <input type="text" class="form-control" placeholder="Nom" formControlName="nomUrgence">
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Téléphone <b class="text-danger">*</b></label>
+                    <input type="text" class="form-control" placeholder="Téléphone" formControlName="telephoneUrgence">
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <label class="mr-2">Adresse <b class="text-danger">*</b></label>
+                    <input type="text" class="form-control" placeholder="Adresse" formControlName="adresseUrgence">
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div class="text-right">
+            <button (click)="effacerChamps()" class="btn btn-ena">Nouveau</button>
+            <button type="submit" class="btn btn-ena">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <table class="table table-bordered table-sm">
+          <thead>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Cycle</th>
+            <th>Section</th>
+            <th>Promotion</th>
+            <th>#</th>
+          </thead>
+          <tbody *ngIf="eleves"> 
+            <tr *ngFor="let eleve of eleves | paginate : {itemsPerPage: ipp, currentPage: p}">
+              <td>{{eleve.prenom}}</td>
+              <td>{{eleve.nom}}</td>
+              <td>{{eleve.eleveCycles[0]?.cycle.nom}}</td>
+              <td>{{eleve.eleveSections[0]?.section.nom}}</td>
+              <td>{{eleve.elevePromotions[0]?.promotion.nom}}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="text-right" *ngIf="eleves">
+          <pagination-controls (pageChange)="p = $event" previousLabel="Précédent" nextLabel="Suivant">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<header class="app-header">
+  <a href="#" class="app-header__logo">
+    <img src="../../assets/img/ena-logo.png" alt="Responsive Image" class="img-fluid">
+  </a>
+  <ul class="app-nav">
+    <li class="app-nav-user">Prénom nom</li>
+    <li class="dropdown">
+      <a href="#" class="app-nav__item" data-toggle="dropdown" aria-label="Open Menu">
+        <i class="fa fa-user"></i>
+      </a>
+      <ul class="dropdown-menu settings-menu dropdown-menu-right">
+        <li><a href="#" class="dropdown-item"><i class="fa fa-cog"></i> Paramètres</a></li>
+        <li><a href="#" class="dropdown-item"><i class="fa fa-user"></i> Profil</a></li>
+        <li><a href="#" class="dropdown-item"><i class="fa fa-sign-out-alt"></i> Déconnexion</a></li>
+      </ul>
+    </li>
+  </ul>
+</header>
+<aside class="app-sidebar">
+  <h5 class="app-sidebar-title">Menu</h5>
+  <ul class="app-menu">
+    <li><a class="app-menu__item" href="#" routerLink="/accueil" routerLinkActive="active-link"><i
+          class="fa fa-home"></i><span>Accueil</span></a></li>
+    <li><a class="app-menu__item" href="#" data-toggle="collapse" data-target="#test" aria-expanded="false"
+        routerLinkActive="active-link"><i class="fas fa-folder"></i><span>Dossiers</span></a>
+      <ul id="test" class="collapse app-menu-sub">
+        <li><a class="app-menu__item app-menu__item__sub" href="#" routerLink="/creerDossier"
+            routerLinkActive="active-link"><i class="fas fa-folder-plus"></i><span>Créer dossier</span></a></li>
+        <li><a class="app-menu__item app-menu__item__sub" href="#" routerLink="/updateDossier" routerLinkActive="active-link"><i
+              class="fas fa-spinner"></i><span>MAJ dossier</span></a></li>
+        <li><a class="app-menu__item app-menu__item__sub" href="#" routerLink="/traiterDossier" routerLinkActive="active-link"><i
+              class="fas fa-check"></i><span>Traiter dossier</span></a></li>
+        <li><a class="app-menu__item app-menu__item__sub" href="#" routerLink="/consulterDossier" routerLinkActive="active-link"><i
+              class="far fa-folder-open"></i><span>Consulter dossier</span></a></li>
+      </ul>
+    </li>
+    <li><a class="app-menu__item" href="#" routerLink="/parametres/classeGrades" routerLinkActive="active-link"><i
+          class="fas fa-cog"></i><span>Paramètres</span></a></li>
+  </ul>
+</aside>
+<div class="app-content">
+  <router-outlet></router-outlet>
+</div>
+<footer class="app-footer">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 text-right">
+        Ecole Nationale d'Administration © {{annee | date:'yyyy'}} - Tous droits réservés
+      </div>
+    </div>
+  </div>
+</footer>

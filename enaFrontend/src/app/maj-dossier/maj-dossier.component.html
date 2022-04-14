@@ -1,0 +1,957 @@
+<div class="row">
+    <div class="col-md-12 col-sm-12 mb-2">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-header__title">Recherche élève</h4>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="searchForm" (ngSubmit)="searchEleve()">
+                    <div class="row text-right">
+                        <div class="col-md-4 col-sm-4">
+                            <label class="mr-2">Matricule</label>
+                            <input type="text" class="form-control" placeholder="Matricule" formControlName="matricule">
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label class="mr-2">Prénom</label>
+                            <input type="text" class="form-control" placeholder="Prénom" formControlName="prenom">
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label class="mr-2">Nom</label>
+                            <input type="text" class="form-control" placeholder="Nom" formControlName="nom">
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label class="mr-2">Promotion</label>
+                            <select class="form-control" formControlName="promotion">
+                                <option value="">Choisir Promotion</option>
+                                <option *ngFor="let promotion of promotions" value="{{promotion.nom}}">{{promotion.nom}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label class="mr-2">Date Naiss</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label class="mr-2">Etat</label>
+                            <select class="form-control" formControlName="etatValidation">
+                                <option value="">Choisir l'état des dossiers</option>
+                                <option *ngFor="let validation of validations" value="{{validation.nom}}">
+                                    {{validation.nom}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label class="mr-2">Cycle</label>
+                            <select class="form-control" formControlName="cycle">
+                                <option value="">Choisir cycle</option>
+                                <option *ngFor="let cycle of cycles" value="{{cycle.nom}}">{{cycle.nom}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label class="mr-2">Section</label>
+                            <select class="form-control" formControlName="section">
+                                <option value="">Choisir Section</option>
+                                <option *ngFor="let section of sections" value="{{section.nom}}">{{section.nom}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 mt-2">
+                            <button type="submit" class="btn btn-ena"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12">
+        <div class="card special">
+            <div class="card-body">
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>PRENOM</th>
+                            <th>NOM</th>
+                            <th>CYCLE</th>
+                            <th>SECTION</th>
+                            <th>PROMOTION</th>
+                            <th class="text-center">#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let eleve of eleves | paginate : {itemsPerPage: ipp, currentPage: p}">
+                            <td>{{eleve?.prenom}}</td>
+                            <td>{{eleve?.nom}}</td>
+                            <td>{{eleve?.eleveCycles[0]?.cycle.nom}}</td>
+                            <td>{{eleve.eleveSections[0]?.section.nom}}</td>
+                            <td>{{eleve?.elevePromotions[0]?.promotion.nom}}</td>
+                            <td>
+                                <a type="button" (click)="openUpdate(modifier_eleve, eleve)" class="btn btn-primary"><i
+                                        class="far fa-eye"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-right" *ngIf="eleves">
+                    <pagination-controls (pageChange)="p = $event" previousLabel="Précédent" nextLabel="Suivant">
+                    </pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #modifier_eleve let-modal>
+        <div class="modal-header">
+            <h4 class="modal-header__title">Mise à jour Dossier ---> {{eleve?.prenom}} {{eleve?.nom}}</h4>
+            <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-informations-tab" data-toggle="pill" href="#pills-informations"
+                        role="tab" aria-controls="pills-informations" aria-selected="true">Informations élève</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-dossiers-tab" data-toggle="pill" href="#pills-dossiers" role="tab"
+                        aria-controls="pills-dossiers" aria-selected="true">Dossiers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-documents-tab" data-toggle="pill" href="#pills-documents" role="tab"
+                        aria-controls="pills-documents" aria-selected="false">Documents complémentaires</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-diplomes-tab" data-toggle="pill" href="#pills-diplomes" role="tab"
+                        aria-controls="pills-diplomes" aria-selected="false">Diplômes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-autres-documents-tab" data-toggle="pill"
+                        href="#pills-autres-documents" role="tab" aria-controls="pills-autres-documents"
+                        aria-selected="false">Autres documents</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-droit-inscription-tab" data-toggle="pill"
+                        href="#pills-droit-inscription" role="tab" aria-controls="pills-droit-inscription"
+                        aria-selected="false">Droit d'inscription</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-informations" role="tabpanel"
+                    aria-labelledby="pills-informations-tab">
+                    <form [formGroup]="editForm" (ngSubmit)="updateDossier()">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <fieldset>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Voie d'accès <b class="text-danger">*</b></label>
+                                            <select class="form-control" formControlName="voieAcces"
+                                                [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                                                <option value="">Choix Voie</option>
+                                                <option *ngFor="let voie of voies" value="{{voie.id}}">{{voie.nom}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Type d'élève <b class="text-danger">*</b></label>
+                                            <select class="form-control" formControlName="typeEleve"
+                                                [ngClass]="{'is-invalid': submitted && f.typeEleve.errors}">
+                                                <option value="">Choix type</option>
+                                                <option value="Elève" selected>Elève</option>
+                                                <option value="Auditeur">Auditeur</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">N° Concours</label>
+                                            <input type="text" class="form-control" placeholder="N° Concours"
+                                                formControlName="numConcours">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Cycle <b class="text-danger">*</b></label>
+                                            <select class="form-control" formControlName="cycle"
+                                                [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                                                <option value="">Choix cycle</option>
+                                                <option *ngFor="let cycle of cycles" value="{{cycle.id}}">{{cycle.nom}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Matricule</label>
+                                            <input type="text" class="form-control" placeholder="Matricule"
+                                                formControlName="matricule">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Promotion <b class="text-danger">*</b></label>
+                                            <select class="form-control" formControlName="promotion"
+                                                [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                                                <option value="">Choix promotion</option>
+                                                <option *ngFor="let promotion of promotions" value="{{promotion.id}}">
+                                                    {{promotion.nom}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Section</label>
+                                            <select class="form-control" formControlName="section">
+                                                <option value="">Choix section</option>
+                                                <option *ngFor="let section of sections" value="{{section.id}}">
+                                                    {{section.nom}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-12 col-sm-12">
+                                <fieldset>
+                                    <legend>Identification</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-8 col-sm-8">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">Prénom <b class="text-danger">*</b></label>
+                                                    <input type="text" class="form-control" placeholder="Prénom"
+                                                        formControlName="prenom"
+                                                        [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">Sexe <b class="text-danger">*</b></label>
+                                                    <select class="form-control" formControlName="sexe"
+                                                        [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                                                        <option value="">Choix sexe</option>
+                                                        <option value="masculin">Masculin</option>
+                                                        <option value="feminin">Féminin</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">Nom <b class="text-danger">*</b></label>
+                                                    <input type="text" class="form-control" placeholder="Nom"
+                                                        formControlName="nom"
+                                                        [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">Nationalité <b class="text-danger">*</b></label>
+                                                    <select class="form-control" formControlName="nationalite"
+                                                        [ngClass]="{'is-invalid': submitted && f.voieAcces.errors}">
+                                                        <option value="">Choix Nationalité</option>
+                                                        <option *ngFor="let pay of pays" value="{{pay.nationalite}}">
+                                                            {{pay.nationalite}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">Date Naiss <b class="text-danger">*</b></label>
+                                                    <input type="date" class="form-control" formControlName="dateNaiss">
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">NCI <b class="text-danger">*</b></label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Numéro carte d'identité" formControlName="nci">
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">Prénom mère <b class="text-danger">*</b></label>
+                                                    <input type="text" class="form-control" placeholder="Prénom mère"
+                                                        formControlName="prenomMere">
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">Prénom père <b class="text-danger">*</b></label>
+                                                    <input type="text" class="form-control" placeholder="Prénom père"
+                                                        formControlName="prenomPere">
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">Nom mère <b class="text-danger">*</b></label>
+                                                    <input type="text" class="form-control" placeholder="Nom mère"
+                                                        formControlName="nomMere">
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="mr-2">Nom père <b class="text-danger">*</b></label>
+                                                    <input type="text" class="form-control" placeholder="Nom père"
+                                                        formControlName="nomPere">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <div class="row text-right">
+                                                <div class="col-md-12 col-sm-12">
+                                                    <label class="mr-2">Pays</label>
+                                                    <select class="form-control" (change)="getRegions($event)"
+                                                        formControlName="pays">
+                                                        <option value="">Choix pays</option>
+                                                        <option *ngFor="let pay of pays" value="{{pay.id}}">{{pay.nom}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12 col-sm-12">
+                                                    <label class="mr-2">Région</label>
+                                                    <select class="form-control" (change)="getVilles($event)"
+                                                        formControlName="region">
+                                                        <option value="">Choix région</option>
+                                                        <option *ngFor="let region of regions" value="{{region.id}}">
+                                                            {{region.nom}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12 col-sm-12">
+                                                    <label class="mr-2">Ville</label>
+                                                    <select class="form-control" formControlName="ville">
+                                                        <option value="">Choix ville</option>
+                                                        <option *ngFor="let ville of villes" value="{{ville.id}}">
+                                                            {{ville.nom}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12 col-sm-12">
+                                                    <label class="mr-2">Lieu Naiss <b class="text-danger">*</b></label>
+                                                    <input type="text" class="form-control" placeholder="Lieu naissance"
+                                                        formControlName="lieuNaiss">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-4 col-sm-4 mb-2">
+                                <fieldset>
+                                    <legend>Adresses</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">A Dakar</label>
+                                            <input type="text" class="form-control" placeholder="A Dakar"
+                                                formControlName="aDakar">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Hors de Dakar</label>
+                                            <input type="text" class="form-control" placeholder="Hors de Dakar"
+                                                formControlName="horsDakar">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Email Privé <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Email privé"
+                                                formControlName="emailPrive">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Email Pro</label>
+                                            <input type="text" class="form-control" placeholder="Email Pro"
+                                                formControlName="emailPro">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-4 col-sm-4 mb-2">
+                                <fieldset>
+                                    <legend>Téléphones</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Mobile 1 <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Mobile 1"
+                                                formControlName="mobile1">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Mobile 2</label>
+                                            <input type="text" class="form-control" placeholder="Mobile 2"
+                                                formControlName="mobile2">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Mobile 3</label>
+                                            <input type="text" class="form-control" placeholder="Mobile 3"
+                                                formControlName="mobile3">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Domicile</label>
+                                            <input type="text" class="form-control" placeholder="Domicile"
+                                                formControlName="domicile">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-4 col-sm-4 mb-2">
+                                <fieldset>
+                                    <legend>En cas d'urgence</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Prénom <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Prénom"
+                                                formControlName="prenomUrgence">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Nom <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Nom"
+                                                formControlName="nomUrgence">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Téléphone <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Téléphone"
+                                                formControlName="telephoneUrgence">
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <label class="mr-2">Adresse <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Adresse"
+                                                formControlName="adresseUrgence">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-ena">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="pills-dossiers" role="tabpanel" aria-labelledby="pills-dossiers-tab">
+                    maman
+                </div>
+                <div class="tab-pane fade" id="pills-documents" role="tabpanel" aria-labelledby="pills-documents-tab">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 mb-2">
+                            <form [formGroup]="docComplementaireForm" (ngSubmit)="addDocComplementaire()">
+                                <fieldset>
+                                    <legend>Certificat de Nationalité</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Numéro <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Numéro" formControlName="numeroNationalite">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Cour d'appel</label>
+                                            <select class="form-control" formControlName="courAppelNationalite">
+                                                <option value="">Choisir cour</option>
+                                                <option value="Dakar">Dakar</option>
+                                                <option value="Saint Louis">Saint Louis</option>
+                                                <option value="Thies">Thiès</option>
+                                                <option value="Louga">Louga</option>
+                                                <option value="Ziguinchor">Ziguinchor</option>
+                                                <option value="Tambacounda">Tambacounda</option>
+                                                <option value="Diourbel">Diourbel</option>
+                                                <option value="Matam">Matam</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Tribunal d'instance</label>
+                                            <select class="form-control" formControlName="tribunalInstanceNationalite">
+                                                <option value="">Choisir tribubal</option>
+                                                <option value="Dakar">Dakar</option>
+                                                <option value="Saint Louis">Saint Louis</option>
+                                                <option value="Thies">Thiès</option>
+                                                <option value="Louga">Louga</option>
+                                                <option value="Ziguinchor">Ziguinchor</option>
+                                                <option value="Tambacounda">Tambacounda</option>
+                                                <option value="Diourbel">Diourbel</option>
+                                                <option value="Matam">Matam</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date</label>
+                                            <input type="date" class="form-control" formControlName="dateNationalite">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Pdt du tribunal</label>
+                                            <input type="text" class="form-control" placeholder="Pdt du tribunal" formControlName="presidentInstanceNationalite">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Casier Judiciaire</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-">
+                                            <label class="mr-2">Numéro <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Numéro" formControlName="numeroCasier">
+                                        </div>
+                                        <div class="col-md-4 col-sm-">
+                                            <label class="mr-2">Cour d'appel</label>
+                                            <select class="form-control" formControlName="courAppelCasier">
+                                                <option value="">Choisir cour</option>
+                                                <option value="Dakar">Dakar</option>
+                                                <option value="Saint Louis">Saint Louis</option>
+                                                <option value="Thies">Thiès</option>
+                                                <option value="Louga">Louga</option>
+                                                <option value="Ziguinchor">Ziguinchor</option>
+                                                <option value="Tambacounda">Tambacounda</option>
+                                                <option value="Diourbel">Diourbel</option>
+                                                <option value="Matam">Matam</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-">
+                                            <label class="mr-2">Tribunal d'instance</label>
+                                            <select class="form-control" formControlName="tribunalInstanceCasier">
+                                                <option value="">Choisir tribubal</option>
+                                                <option value="Dakar">Dakar</option>
+                                                <option value="Saint Louis">Saint Louis</option>
+                                                <option value="Thies">Thiès</option>
+                                                <option value="Louga">Louga</option>
+                                                <option value="Ziguinchor">Ziguinchor</option>
+                                                <option value="Tambacounda">Tambacounda</option>
+                                                <option value="Diourbel">Diourbel</option>
+                                                <option value="Matam">Matam</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-">
+                                            <label class="mr-2">Date</label>
+                                            <input type="date" class="form-control" formControlName="dateCasier">
+                                        </div>
+                                        <div class="col-md-4 col-sm-">
+                                            <label class="mr-2">Pdt du tribunal</label>
+                                            <input type="text" class="form-control" placeholder="Pdt du tribunal" formControlName="presidentInstanceCasier">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Visite</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Médecin <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Médecin" formControlName="medecin">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Examens <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Examens" formControlName="examensCliniques">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Résultats <b class="text-danger">*</b></label>
+                                            <select class="form-control" formControlName="resultats">
+                                                <option value="Apte">Apte</option>
+                                                <option value="Inapte">Inapte</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Lieu <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Lieu" formControlName="lieuVisite">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date <b class="text-danger">*</b></label>
+                                            <input type="date" class="form-control" formControlName="dateVisite">
+                                        </div>
+                                    </div>
+                                    <div class="row text-right">
+                                        <div class="col-md-2 col-sm-2">
+                                            <label>Contre Visite</label>
+                                        </div>
+                                        <div class="col-md-9 col-sm-9">
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Médecin <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Médecin" formControlName="medecinContreVisite">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Résultats <b class="text-danger">*</b></label>
+                                            <select class="form-control" formControlName="resultatsContreVisite">
+                                                <option value="Apte">Apte</option>
+                                                <option value="Inapte">Inapte</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date <b class="text-danger">*</b></label>
+                                            <input type="date" class="form-control" formControlName="dateContreVisite">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Engagement</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">N° Légalisation <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="N° Légalisation" formControlName="numeroEngagement">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Durée engagement <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Durée engagement" formControlName="dureeEngagement">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date Légalisation <b class="text-danger">*</b></label>
+                                            <input type="date" class="form-control" formControlName="dateLegislation">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date <b class="text-danger">*</b></label>
+                                            <input type="date" class="form-control" formControlName="dateEngagement">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="text-right mt-2">
+                                    <button type="submit" class="btn btn-ena">Enregistrer</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-12 col-sm-12">
+                            <table class="table table-bordered table-sm">
+                                <thead class="text-center">
+                                    <th>Nom Dossier</th>
+                                    <th>#</th>
+                                </thead>
+                                <tbody>
+                                 <!--   <tr *ngFor="let dossier of eleve.dossiers">
+                                        <td> Dossier {{eleve.dossiers.indexOf(dossier) + 1}}</td>
+                                        <td><a>1</a></td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-diplomes" role="tabpanel" aria-labelledby="pills-diplomes-tab">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 mb-2">
+                            <form>
+                                <fieldset>
+                                    <legend>Diplômes</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Référence <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Référence">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date obtention <b class="text-danger">*</b></label>
+                                            <input type="date" class="form-control">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date délivrance</label>
+                                            <input type="date" class="form-control">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Diplôme <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control" placeholder="Diplôme">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Mention</label>
+                                            <select class="form-control">
+                                                <option value="">Choisir mention</option>
+                                                <option value="Très Bien">Très Bien</option>
+                                                <option value="Bien">Bien</option>
+                                                <option value="Assez Bien">Assez Bien</option>
+                                                <option value="Passable">Passable</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Spécialité</label>
+                                            <input type="text" class="form-control" placeholder="Spécialité">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Série</label>
+                                            <input type="text" class="form-control" placeholder="Série">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="text-right mt-2">
+                                    <button class="btn btn-ena">Nouveau</button>
+                                    <button type="submit" class="btn btn-ena">Enregistrer</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-12 col-sm-12">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Année obtention</th>
+                                        <th>Mention</th>
+                                        <th>Spécialité</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>NFnnef</td>
+                                        <td>NFnnef</td>
+                                        <td>NFnnef</td>
+                                        <td>NFnnef</td>
+                                        <td>NFnnef</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12 col-sm-12">
+                            <hr>
+                        </div>
+                        <div class="col-md-12 col-sm-12">
+                            <table class="table table-bordered table-sm">
+                                <thead class="text-center">
+                                    <th>Nom Dossier</th>
+                                    <th>#</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Dossier 1</td>
+                                        <td><a>1</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dossier 2</td>
+                                        <td><a>2</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-autres-documents" role="tabpanel"
+                    aria-labelledby="pills-autres-documents-tab">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 mb-2">
+                            <form>
+                                <fieldset>
+                                    <legend>Bulletin de salaire</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Matricule <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                placeholder="Matricule">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Emploi</label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                placeholder="Emploi">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Corps</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Corps</option>
+                                                <option *ngFor="let corp of corps" value="{{corp.id}}">
+                                                    {{corp.nom}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Classe/Grade</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Classe/Grade</option>
+                                                <option *ngFor="let classe of classes" value="{{classe.id}}">
+                                                    {{classe.nom}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Statut</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Statut</option>
+                                                <option *ngFor="let statut of statuts" value="{{statut.id}}">
+                                                    {{statut.nom}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Echelon</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Echelon</option>
+                                                <option *ngFor="let echelon of echelons" value="{{echelon.id}}">
+                                                    {{echelon.nom}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Hierarchie</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Hierarchie</option>
+                                                <option *ngFor="let hierarchie of hierarchies"
+                                                    value="{{hierarchie.id}}">
+                                                    {{hierarchie.nom}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Certificat Administratif</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Matricule <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Référence <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                placeholder="Référence">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Lieu</label>
+                                            <input type="text" class="form-control form-control-sm" placeholder="Lieu">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date</label>
+                                            <input type="date" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Grade</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Grade</option>
+                                                <option *ngFor="let classe of classes" value="{{classe.id}}">
+                                                    {{classe.nom}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Ancienneté Emploi</label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                placeholder="Ancienneté Emploi">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Ancienneté Corps</label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                placeholder="Ancienneté Corps">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Hierarchie</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Hierarchie</option>
+                                                <option *ngFor="let hierarchie of hierarchies"
+                                                    value="{{hierarchie.id}}">
+                                                    {{hierarchie.nom}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Arrêté</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">N° arrêté <b class="text-danger">*</b></label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                placeholder="N° arrêté">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date arrêté</label>
+                                            <input type="date" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Date décret</label>
+                                            <input type="date" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Décret</label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                placeholder="Décret">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Corps</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Corps</option>
+                                                <option *ngFor="let corp of corps" value="{{corp.id}}">
+                                                    {{corp.nom}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Classe/Grade</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Classe/Grade</option>
+                                                <option *ngFor="let classe of classes" value="{{classe.id}}">
+                                                    {{classe.nom}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Echelon</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Echelon</option>
+                                                <option *ngFor="let echelon of echelons" value="{{echelon.id}}">
+                                                    {{echelon.nom}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-2">Hiérarchie</label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir Hierarchie</option>
+                                                <option *ngFor="let hierarchie of hierarchies"
+                                                    value="{{hierarchie.id}}">
+                                                    {{hierarchie.nom}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="text-right mt-2">
+                                    <button class="btn btn-ena">Nouveau</button>
+                                    <button type="submit" class="btn btn-ena">Enregistrer</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mb2">
+                            <table class="table table-bordered table-sm">
+                                <thead class="text-center">
+                                    <th>Nom Dossier</th>
+                                    <th>#</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Dossier 1</td>
+                                        <td><a>1</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dossier 2</td>
+                                        <td><a>2</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-droit-inscription" role="tabpanel"
+                    aria-labelledby="pills-inscription-tab">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 mb-2">
+                            <form>
+                                <fieldset>
+                                    <legend>Droit d'inscription</legend>
+                                    <div class="row text-right">
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-3">N° reçu <b class="text-danger">*</b></label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                placeholder="N° Reçu">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-3">Montant <b class="text-danger">*</b></label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                placeholder="Montant">
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-3">Année <b class="text-danger">*</b></label>
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Choisir l'année</option>
+                                                <option value="première">première</option>
+                                                <option value="deuxième">deuxième</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <label class="mr-3">Date <b class="text-danger">*</b></label>
+                                            <input type="date" class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="text-right mt-2">
+                                    <button class="btn btn-ena" type="button">Nouveau</button>
+                                    <button class="btn btn-ena" type="submit">Enregistrer</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mb-2">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Numéro</th>
+                                        <th>Montant</th>
+                                        <th>Année</th>
+                                        <th>Date</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>NFnnef</td>
+                                        <td>NFnnef</td>
+                                        <td>NFnnef</td>
+                                        <td>NFnnef</td>
+                                        <td>NFnnef</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mb-2">
+                            <table class="table table-bordered table-sm">
+                                <thead class="text-center">
+                                    <th>Nom Dossier</th>
+                                    <th>#</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Dossier 1</td>
+                                        <td><a>1</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dossier 2</td>
+                                        <td><a>2</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

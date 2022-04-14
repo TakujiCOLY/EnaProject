@@ -1,0 +1,125 @@
+<div class="row">
+  <div class="col-md-6 col-sm-6 mb-2">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header__title">Rechercher Promotion</h4>
+        <div *ngIf="submittedSearch" class="text-danger text-center">
+          <b><i>Veuillez saisir au moins un champs</i></b>
+        </div>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="searchPromotionForm" (ngSubmit)="searchPromotion()">
+          <div class="row">
+            <div class="col-md-4 col-sm-4">
+              <div class="form-group">
+                <label>Nom</label>
+                <input type="text" class="form-control" placeholder="Nom" formControlName="nom">
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-4">
+              <div class="form-group">
+                <label>Parrain</label>
+                <input type="text" class="form-control" placeholder="Parrain" formControlName="parrain">
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-4">
+              <div class="form-group">
+                <label>Activation</label>
+                <select class="form-control" formControlName="active">
+                  <option value="">Choix activation</option>
+                  <option value="1">OUI</option>
+                  <option value="0">NON</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="text-right">
+            <button type="submit" class="btn btn-ena">Rechercher</button>
+            <button type="button" class="btn btn-danger" (click)="effacerSearchChamps()">Effacer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-6 mb-2">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header__title">Ajouter Promotion</h4>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="editPromotionForm" (ngSubmit)="addPromotion()">
+          <div class="row">
+            <div class="col-md-4 col-sm-4">
+              <div class="form-group">
+                <label>Nom</label>
+                <input type="text" class="form-control" placeholder="Nom" formControlName="nom"
+                  [ngClass]="{'is-invalid': submitted && f.nom.errors}">
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <div class="form-group">
+                  <label>Parrain</label>
+                  <input type="text" class="form-control" placeholder="Parrain" formControlName="parrain">
+                </div>
+              </div>
+            <div class="col-md-4 col-sm-4">
+              <div class="form-group">
+                <label>Activation</label>
+                <select class="form-control" formControlName="active"
+                  [ngClass]="{'is-invalid': submitted && f.active.errors}">
+                  <option value="">Choix activation</option>
+                  <option value="1">OUI</option>
+                  <option value="0">NON</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="text-right">
+            <button type="submit" class="btn btn-ena">Ajouter</button>
+            <button type="button" class="btn btn-danger" (click)="effacerChamps()">Effacer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-header__title">Liste des Promotions</h4>
+        <div>
+          <select id="nombre-element" #nombre (change)="getIpp(nombre.value)">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered table-sm">
+          <thead class="text-center">
+            <tr>
+              <th>Nom</th>
+              <th>Parrain</th>
+              <th>Activation</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let promotion of promotions | paginate : {itemsPerPage: ipp, currentPage: p}">
+              <td>{{promotion?.nom}}</td>
+              <td>{{promotion?.parrain}}</td>
+              <td>{{promotion?.active == true ? 'OUI' : 'NON'}}</td>
+              <td><a type="button" class="btn btn-secondary" (click)="getPromotion(promotion)"><i
+                    class="fa fa-edit"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="text-right" *ngIf="promotions">
+          <pagination-controls (pageChange)="p = $event" previousLabel="Précédent" nextLabel="Suivant">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

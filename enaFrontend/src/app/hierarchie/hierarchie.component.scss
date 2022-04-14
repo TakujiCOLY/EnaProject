@@ -1,0 +1,119 @@
+.card {
+    background-color: #ffffff;
+    border: 0 solid #eee;
+    border-radius: 0;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    font-size: 0.8rem;
+}
+
+.card-header {
+    padding: 0.75rem 1rem;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    display: flex;
+
+    .card-header__title {
+        flex: 1 0 auto;
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+
+    #nombre-element {
+        height: calc(1.5em + 0.75rem + 2px);
+        font-size: 0.9rem;
+        font-weight: bold;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #f7f7f7f7;
+        background-clip: padding-box;
+        border: 1px solid #e7800d;
+        border-radius: 0;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .btn {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+    }
+}
+
+.card-body {
+    padding: 1rem;
+
+    label {
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .form-control {
+        height: calc(2rem + 1px);
+        padding: 0.45rem 0.75rem;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        color: #495057;
+        border-radius: 0;
+    }
+
+    .table {
+        color: #666666;
+
+        .form-table {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+        }
+    }
+}
+
+.btn {
+    font-weight: 400;
+    border: 1px solid transparent;
+    padding: 0.45rem 0.75rem;
+    margin-right: 7px;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    border-radius: 0;
+    -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+        -webkit-box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+        -webkit-box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+
+.btn-ena {
+    color: #fff;
+    background-color: #e9b172;
+    border-color: #e9b172;
+}
+
+.modal-header {
+    padding: 0.75rem 1rem;
+
+    .modal-header__title {
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+}
+
+.modal-body {
+    label {
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .form-control {
+        height: calc(2rem + 1px);
+        padding: 0.45rem 0.75rem;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        color: #495057;
+        border-radius: 0;
+    }
+}
